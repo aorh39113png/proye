@@ -50,8 +50,7 @@ export interface Role {
   codr?: number;
   nombre: string;
   estado?: number;
-    asignado?: boolean;
-
+  asignado?: boolean;
 }
 export interface Item {
   codi?: number;
@@ -111,13 +110,13 @@ export interface Dmodalidad {
 export interface Usuario {
   login: string;
   estado?: number;
-  personal: { // We only need the name for display
+  personal: {
+    // We only need the name for display
     codp: number;
     nombre: string;
     ap: string;
     am?: string;
   };
-
 }
 // ... (tus interfaces existentes: PageResponse, Nivel, Paralelo, Materia, Mapa, Gestion, etc.)
 
@@ -163,7 +162,6 @@ export interface Dicta {
   usuario: {
     login: string;
   };
-
 }
 
 export interface Estudiante {
