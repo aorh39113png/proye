@@ -1,0 +1,72 @@
+<div
+  class="fixed inset-0 bg-slate-800/60 backdrop-blur-sm flex items-center justify-center z-50 font-sans"
+>
+  <div
+    class="bg-gradient-to-br from-blue-50 via-blue-100 to-emerald-50 p-8 rounded-3xl shadow-2xl w-full max-w-md border border-blue-300"
+  >
+    <!-- TÍTULO -->
+    <h2
+      class="text-2xl md:text-3xl font-extrabold text-slate-700 mb-6 border-b-2 border-blue-300 pb-3 text-center tracking-wide flex items-center justify-center gap-3"
+    >
+      <span
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-blue-200 text-slate-700 text-lg shadow-md"
+      >
+        <i class="fa-solid fa-key"></i>
+      </span>
+      <span>
+        {{
+          modoEdicion ? "Modificar Datos de Acceso" : "Asignar Datos de Acceso"
+        }}
+      </span>
+    </h2>
+
+    <!-- FORMULARIO -->
+    <form class="space-y-5">
+      <div class="text-center text-slate-700 font-semibold mb-2">
+        {{ personaNombreCompleto }}
+      </div>
+
+      <input
+        [(ngModel)]="usuario.login"
+        name="login"
+        placeholder="Nombre del Usuario"
+        class="w-full px-4 py-2.5 border border-blue-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-300 focus:outline-none bg-white placeholder-slate-500"
+      />
+
+      <input
+        [(ngModel)]="usuario.password"
+        name="password"
+        type="password"
+        placeholder="Password"
+        class="w-full px-4 py-2.5 border border-blue-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-300 focus:outline-none bg-white placeholder-slate-500"
+      />
+
+      <input
+        [(ngModel)]="usuario.repetir"
+        name="repetir"
+        type="password"
+        placeholder="Repetir Password"
+        class="w-full px-4 py-2.5 border border-blue-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-300 focus:outline-none bg-white placeholder-slate-500"
+      />
+    </form>
+
+    <!-- BOTONES -->
+    <div class="flex justify-end gap-4 mt-8">
+      <!-- BOTÓN GUARDAR -->
+      <button
+        (click)="guardar.emit()"
+        class="bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-white px-6 py-2.5 rounded-full font-semibold tracking-wide shadow-md hover:shadow-lg transition-transform duration-200 hover:-translate-y-[1px] hover:brightness-110"
+      >
+        {{ modoEdicion ? "Modificar" : "Guardar" }}
+      </button>
+
+      <!-- BOTÓN CANCELAR -->
+      <button
+        (click)="cerrar.emit()"
+        class="bg-white text-slate-700 border border-blue-300 px-6 py-2.5 rounded-full font-semibold tracking-wide hover:bg-blue-100 shadow-sm hover:shadow-md transition"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

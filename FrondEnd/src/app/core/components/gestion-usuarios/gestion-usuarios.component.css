@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  background-color: #e7eef7;
+  border: 1px solid #9db8d1;
+  border-radius: 14px;
+  color: #1e3a5f;
+  padding: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border: 1px solid #9db8d1;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+td,
+th {
+  font-size: 0.95rem;
+  color: #1e3a5f;
+  border-bottom: 1px solid #c5d4e3;
+}
+
+select,
+input {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #9db8d1;
+  color: #1e3a5f;
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border-color: #1e3a5f;
+  box-shadow: 0 0 4px rgba(30, 58, 95, 0.4);
+}
+
+select:hover,
+input:hover {
+  background-color: #d6e1ee;
+}

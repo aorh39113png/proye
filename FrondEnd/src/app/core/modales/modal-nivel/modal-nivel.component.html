@@ -1,0 +1,49 @@
+<div
+  class="fixed inset-0 bg-[#1e3a5f]/60 backdrop-blur-sm flex items-center justify-center z-50 font-[Times_New_Roman]"
+>
+  <div
+    class="bg-[#e7eef7] p-8 rounded-3xl shadow-2xl w-full max-w-sm border border-[#9db8d1]"
+  >
+    <!-- TÍTULO -->
+    <h3
+      class="text-2xl md:text-3xl font-extrabold text-[#1e3a5f] mb-6 tracking-wide text-center border-b-2 border-[#bfa76d] pb-3"
+    >
+      {{ modoEdicion ? "Modificar Datos de Nivel" : "Adicionar Niveles" }}
+    </h3>
+
+    <!-- FORMULARIO -->
+    <div class="space-y-4">
+      <div>
+        <label
+          class="block text-left text-sm font-semibold text-[#1e3a5f] mb-1"
+        >
+          Nombre del Nivel:
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="nivel.nombre"
+          placeholder="Ej: Primaria, Secundaria..."
+          class="w-full px-4 py-2.5 border border-[#9db8d1] rounded-xl shadow-sm bg-white focus:ring-2 focus:ring-[#bfa76d] focus:border-[#bfa76d] focus:outline-none placeholder-[#1e3a5f]/50"
+        />
+      </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="flex justify-center gap-6 mt-8">
+      <button
+        (click)="guardar.emit(nivel)"
+        class="bg-[#1e3a5f] hover:bg-[#24466e] text-white px-6 py-2.5 rounded-full font-semibold tracking-wide shadow-md hover:shadow-lg transition-transform duration-200 hover:-translate-y-[1px]"
+      >
+        {{ modoEdicion ? "Modificar" : "Guardar" }}
+      </button>
+
+      <button
+        (click)="cerrar.emit()"
+        class="bg-white border border-[#9db8d1] text-[#1e3a5f] px-6 py-2.5 rounded-full font-semibold hover:bg-[#f4f7fa] shadow-sm hover:shadow-md transition"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

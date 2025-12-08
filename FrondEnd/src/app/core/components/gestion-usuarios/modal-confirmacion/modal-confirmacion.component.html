@@ -1,0 +1,31 @@
+<div
+  class="fixed inset-0 bg-slate-800/60 backdrop-blur-sm flex items-center justify-center z-50 font-sans"
+>
+  <div
+    class="bg-blue-50 p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center border border-blue-300"
+  >
+    <!-- Mensaje -->
+    <p
+      class="text-xl mb-6 font-extrabold text-slate-700 tracking-wide leading-snug"
+    >
+      {{ mensaje }}
+    </p>
+
+    <!-- Botones -->
+    <div class="flex justify-center gap-6 mt-4">
+      <button
+        (click)="aceptar.emit()"
+        class="bg-blue-300 text-slate-700 px-6 py-2.5 rounded-full font-semibold tracking-wide shadow-md hover:bg-blue-400 hover:-translate-y-[1px] transition-all"
+      >
+        Aceptar
+      </button>
+
+      <button
+        (click)="cerrar.emit()"
+        class="bg-white border border-blue-300 text-slate-700 px-6 py-2.5 rounded-full font-semibold tracking-wide hover:bg-blue-100 shadow-sm transition"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
