@@ -1,0 +1,244 @@
+
+-- Catálogo de menús y procesos (B-7 y B-8)
+CREATE TABLE procesos (
+    codp        SERIAL PRIMARY KEY,
+    nombre      VARCHAR(40) NOT NULL,
+    enlace      VARCHAR(80) NOT NULL,
+    ayuda       VARCHAR(100),
+    estado      INTEGER NOT NULL
+);
+
+CREATE TABLE menus (
+    codm    SERIAL PRIMARY KEY,
+    nombre  VARCHAR(40) NOT NULL,
+    estado  INTEGER NOT NULL
+);
+
+CREATE TABLE mepro (
+    codm INTEGER REFERENCES menus(codm) ON DELETE CASCADE,
+    codp INTEGER REFERENCES procesos(codp) ON DELETE CASCADE,
+    PRIMARY KEY (codm, codp)
+);
+
+CREATE TABLE roles (
+    codr    SERIAL PRIMARY KEY,
+    nombre  VARCHAR(40) NOT NULL,
+    estado  INTEGER NOT NULL
+);
+
+CREATE TABLE rolme (
+    codr INTEGER REFERENCES roles(codr) ON DELETE CASCADE,
+    codm INTEGER REFERENCES menus(codm) ON DELETE CASCADE,
+    PRIMARY KEY (codr, codm)
+);
+
+-- Personas y accesos (B-3, B-5, B-6, B-9)
+CREATE TABLE personal (
+    codp    SERIAL PRIMARY KEY,
+    nombre  VARCHAR(60) NOT NULL,
+    ap      VARCHAR(60),
+    am      VARCHAR(60),
+    estado  INTEGER NOT NULL,
+    fnac    DATE,
+    ecivil  CHAR(1),
+    genero  CHAR(1),
+    direc   VARCHAR(100),
+    telf    VARCHAR(30),
+    tipo    CHAR(1) NOT NULL,
+    foto    VARCHAR(200)
+);
+
+CREATE TABLE datos (
+    codp    INTEGER PRIMARY KEY REFERENCES personal(codp) ON DELETE CASCADE,
+    cedula  VARCHAR(10) NOT NULL UNIQUE
+);
+
+CREATE TABLE usuarios (
+    login    VARCHAR(30) PRIMARY KEY,
+    password VARCHAR(200) NOT NULL,
+    estado   INTEGER NOT NULL,
+    codp     INTEGER UNIQUE REFERENCES personal(codp) ON DELETE CASCADE
+);
+
+CREATE TABLE usurol (
+    login VARCHAR(30) REFERENCES usuarios(login) ON DELETE CASCADE,
+    codr  INTEGER REFERENCES roles(codr) ON DELETE CASCADE,
+    PRIMARY KEY (login, codr)
+);
+
+-- Catálogos académicos (B-10, B-11, B-12, B-13)
+CREATE TABLE niveles (
+    codn    SERIAL PRIMARY KEY,
+    nombre  VARCHAR(60) NOT NULL,
+    estado  INTEGER NOT NULL
+);
+
+CREATE TABLE materias (
+    codmat  VARCHAR(15) PRIMARY KEY,
+    nombre  VARCHAR(30) NOT NULL,
+    estado  INTEGER NOT NULL,
+    codn    INTEGER NOT NULL REFERENCES niveles(codn) ON DELETE RESTRICT
+);
+
+CREATE TABLE paralelos (
+    codpar  SERIAL PRIMARY KEY,
+    nombre  VARCHAR(40) NOT NULL,
+    estado  INTEGER NOT NULL
+);
+
+CREATE TABLE mapa (
+    codmat   VARCHAR(15) REFERENCES materias(codmat) ON DELETE CASCADE,
+    codpar   INTEGER REFERENCES paralelos(codpar) ON DELETE CASCADE,
+    gestion  INTEGER NOT NULL,
+    estado   INTEGER NOT NULL,
+    PRIMARY KEY (codmat, codpar, gestion)
+);
+
+CREATE TABLE items (
+    codi    SERIAL PRIMARY KEY,
+    nombre  VARCHAR(40) NOT NULL,
+    estado  INTEGER NOT NULL
+);
+
+CREATE TABLE itemat (
+    codmat     VARCHAR(15) REFERENCES materias(codmat) ON DELETE CASCADE,
+    codi       INTEGER REFERENCES items(codi) ON DELETE CASCADE,
+    gestion    INTEGER NOT NULL,
+    ponderacion INTEGER NOT NULL,
+    estado     INTEGER NOT NULL,
+    PRIMARY KEY (codmat, codi, gestion)
+);
+
+-- Inscripciones y asignaciones (B-15, B-16)
+CREATE TABLE general (
+    codg    VARCHAR(15) PRIMARY KEY,
+    gestion INTEGER NOT NULL,
+    login   VARCHAR(30) NOT NULL REFERENCES usuarios(login)
+);
+
+CREATE TABLE dicta (
+    codpar   INTEGER NOT NULL,
+    codp     INTEGER NOT NULL, -- profesor
+    codmat   VARCHAR(15) NOT NULL,
+    gestion  INTEGER NOT NULL,
+    estado   INTEGER NOT NULL,
+    login    VARCHAR(30) NOT NULL REFERENCES usuarios(login),
+    PRIMARY KEY (codpar, codp, codmat, gestion),
+    FOREIGN KEY (codpar) REFERENCES paralelos(codpar) ON DELETE CASCADE,
+    FOREIGN KEY (codp)   REFERENCES personal(codp)  ON DELETE CASCADE,
+    FOREIGN KEY (codmat) REFERENCES materias(codmat) ON DELETE CASCADE
+);
+
+CREATE TABLE progra (
+    codpar   INTEGER NOT NULL,
+    codp     INTEGER NOT NULL, -- alumno
+    codmat   VARCHAR(15) NOT NULL,
+    gestion  INTEGER NOT NULL,
+    estado   INTEGER NOT NULL,
+    login    VARCHAR(30) NOT NULL REFERENCES usuarios(login),
+    PRIMARY KEY (codpar, codp, codmat, gestion),
+    FOREIGN KEY (codpar) REFERENCES paralelos(codpar) ON DELETE CASCADE,
+    FOREIGN KEY (codp)   REFERENCES personal(codp)  ON DELETE CASCADE,
+    FOREIGN KEY (codmat) REFERENCES materias(codmat) ON DELETE CASCADE
+);
+
+-- Notas por ítem evaluativo (B-17)
+CREATE TABLE notas (
+    codnota   SERIAL PRIMARY KEY,
+    codpar    INTEGER NOT NULL,
+    codp      INTEGER NOT NULL,
+    codmat    VARCHAR(15) NOT NULL,
+    gestion   INTEGER NOT NULL,
+    codi      INTEGER NOT NULL,
+    nota      NUMERIC(5,2) NOT NULL,
+    CONSTRAINT fk_notas_progra FOREIGN KEY (codpar, codp, codmat, gestion)
+        REFERENCES progra(codpar, codp, codmat, gestion) ON DELETE CASCADE,
+    CONSTRAINT fk_notas_item FOREIGN KEY (codmat, codi, gestion)
+        REFERENCES itemat(codmat, codi, gestion) ON DELETE CASCADE
+);
+
+-- Datos de ejemplo mínimos
+INSERT INTO procesos (nombre, enlace, ayuda, estado) VALUES
+('Gestión Usuarios', '/usuarios', 'Administra usuarios', 1),
+('Gestión Roles', '/roles', 'Administra roles', 1);
+
+INSERT INTO menus (nombre, estado) VALUES
+('Administración', 1),
+('Académico', 1);
+
+INSERT INTO mepro VALUES
+(1,1),(1,2);
+
+INSERT INTO roles (nombre, estado) VALUES
+('Administrador', 1),
+('Profesor', 1);
+
+INSERT INTO rolme VALUES
+(1,1),(1,2);
+
+INSERT INTO personal (nombre, ap, am, estado, fnac, ecivil, genero, direc, telf, tipo, foto) VALUES
+('Jhair','Cardozo','Garzon',1,'2004-09-22','S','M','Calle 123','78224442','P','foto1.png'),
+('Eudal','Perez','Vargas',1,'1995-05-20','C','M','Av. Central','666777','E','foto2.png');
+
+INSERT INTO datos (codp, cedula) VALUES
+(1,'1234567'),
+(2,'9876543');
+
+INSERT INTO usuarios (login, password, estado, codp) VALUES
+('admin','123456',1,1),
+('eudal','123456',1,2);
+
+INSERT INTO usurol VALUES
+('admin',1),
+('eudal',2);
+
+INSERT INTO niveles (nombre, estado) VALUES
+('Primaria',1),
+('Secundaria',1);
+
+INSERT INTO materias (codmat, nombre, estado, codn) VALUES
+('MAT01','Matemáticas',1,1),
+('LIT01','Literatura',1,2);
+
+INSERT INTO paralelos (nombre, estado) VALUES
+('Paralelo A',1),
+('Paralelo B',1);
+
+INSERT INTO mapa VALUES
+('MAT01', 1, 2023, 1),
+('LIT01', 2, 2023, 1);
+
+INSERT INTO items (nombre, estado) VALUES
+('Examen Parcial',1),
+('Tareas',1);
+
+INSERT INTO itemat VALUES
+('MAT01',1,2023,50,1),
+('MAT01',2,2023,50,1);
+
+INSERT INTO general VALUES
+('G2023', 2023, 'admin'),
+('G2024', 2024, 'admin');
+
+INSERT INTO dicta VALUES
+(1, 1, 'MAT01', 2023, 1, 'admin'),
+(2, 1, 'LIT01', 2023, 1, 'admin');
+
+INSERT INTO progra VALUES
+(1, 2, 'MAT01', 2023, 1, 'admin'),
+(2, 2, 'LIT01', 2023, 1, 'admin');
+
+INSERT INTO notas (codpar, codp, codmat, gestion, codi, nota) VALUES
+(1, 2, 'MAT01', 2023, 1, 85.50),
+(1, 2, 'MAT01', 2023, 2, 90.00);
+CREATE TABLE  modalidades (
+    codmod SERIAL PRIMARY KEY,
+    nombre VARCHAR(60) NOT NULL UNIQUE,
+    estado INTEGER NOT NULL
+);
+CREATE TABLE  dmodalidad (
+    coddm VARCHAR(15) PRIMARY KEY,
+    nombre VARCHAR(40) NOT NULL,
+    estado INTEGER NOT NULL,
+    codmod INTEGER NOT NULL REFERENCES modalidades(codmod)
+);
